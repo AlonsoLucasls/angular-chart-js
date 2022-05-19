@@ -2,7 +2,7 @@ import { ChartServiceService } from './../service/chart-service.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ChartData, ChartOptions } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
-import { DoughnutChartModel } from './models/pie-chart.model';
+import { DoughnutChartModel } from './models/doughnut-chart.model';
 
 @Component({
   selector: 'app-doughnut-chart',
