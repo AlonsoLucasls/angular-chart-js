@@ -2,7 +2,7 @@
 
 App created to help the Angular community that needs to start building Charts with Angular, you can use this project as a base project.
 
-If you prefer to use the real time data (fake data) in the "main" and "chart-signalr" branch you will need to run this API [Chart API](https://github.com/AlonsoLucasls/chart-api) created and configured with SignalR.
+If you prefer to use the real time data (fake data) in the "main" and "feature/chart-signalr" branch you will need to run this API [Chart API](https://github.com/AlonsoLucasls/chart-api) created and configured with SignalR.
 Remember to check program.cs to make some adjustments if needed.
 
 Using the branch "feature/chart-random-call" you don't need to run the [Chart API](https://github.com/AlonsoLucasls/chart-api) because everything is made on front-end.
