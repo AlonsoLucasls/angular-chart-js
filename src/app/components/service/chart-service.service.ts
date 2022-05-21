@@ -1,12 +1,3 @@
-import { PieChartModel } from './../pie-chart/models/pie-chart.model';
-import { LineChartModel } from './../line-chart/models/line-chart.model';
-import {
-  DoughnutChartModel,
-  DoughnutChartModelApi,
-} from './../doughnut-chart/models/doughnut-chart.model';
-import {
-  BarChartModel,
-} from './../bar-chart/models/bar-chart.model';
 import { EventEmitter, Injectable, Output } from '@angular/core';
 import * as sr from '@microsoft/signalr';
 
