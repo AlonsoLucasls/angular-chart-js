@@ -1,7 +1,3 @@
-/* .flex-content {
-  display: flex;
-} */
-
 .flex-main {
   display: flex;
   flex-direction: column;
@@ -37,7 +33,7 @@
   .circular-chart {
     position: relative;
     height: 55vh;
-    width: 25vw;;
+    width: 25vw;
   }
   .linear-chart {
     position: relative;
