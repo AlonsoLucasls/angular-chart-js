@@ -1,7 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ChartData, ChartOptions } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
-import { ChartServiceService } from '../service/chart-service.service';
+import { Subscription } from 'rxjs';
+import { ChartService } from '../service/chart-service.service';
+import { ChartDataModel } from './../service/chart-service.service';
 import { BarChartModel } from './models/bar-chart.model';
 
 @Component({
@@ -25,8 +27,10 @@ export class BarChartComponent implements OnInit {
     },
   };
 
+  subscription?: Subscription;
+
   dataSetValue: BarChartModel[] = [];
-  timerId: any;
+
   mark1 = [
     this.chartServiceService.getRandomIntInclusive(100, 4000),
     this.chartServiceService.getRandomIntInclusive(100, 4000),
@@ -49,21 +53,28 @@ export class BarChartComponent implements OnInit {
     this.chartServiceService.getRandomIntInclusive(100, 4000),
   ];
   mark4 = [
-    this.chartServiceService.getRandomIntInclusive(200, 4000),
-    this.chartServiceService.getRandomIntInclusive(200, 4000),
-    this.chartServiceService.getRandomIntInclusive(200, 4000),
-    this.chartServiceService.getRandomIntInclusive(200, 4000),
-    this.chartServiceService.getRandomIntInclusive(200, 4000),
+    this.chartServiceService.getRandomIntInclusive(100, 4000),
+    this.chartServiceService.getRandomIntInclusive(100, 4000),
+    this.chartServiceService.getRandomIntInclusive(100, 4000),
+    this.chartServiceService.getRandomIntInclusive(100, 4000),
+    this.chartServiceService.getRandomIntInclusive(100, 4000),
   ];
-  constructor(private chartServiceService: ChartServiceService) {}
+  constructor(private chartServiceService: ChartService) {
+    this.subscription = this.chartServiceService.notification.subscribe(
+      (response: ChartDataModel[]) => {
+        if (response) {
+          this.upDateChart(response);
+        }
+      }
+    );
+  }
 
   ngOnInit() {
     this.initChart();
-    this.initTime();
   }
 
   ngOnDestroy(): void {
-    clearInterval(this.timerId);
+    this.subscription?.unsubscribe();
   }
 
   initChart() {
@@ -79,41 +90,11 @@ export class BarChartComponent implements OnInit {
     };
   }
 
-  initTime() {
-    this.timerId = setInterval(() => {
-      const mark1 = [
-        this.chartServiceService.getRandomIntInclusive(1000, 4000),
-        this.chartServiceService.getRandomIntInclusive(1000, 4000),
-        this.chartServiceService.getRandomIntInclusive(1000, 4000),
-        this.chartServiceService.getRandomIntInclusive(1000, 4000),
-        this.chartServiceService.getRandomIntInclusive(1000, 4000),
-      ];
-      const mark2 = [
-        this.chartServiceService.getRandomIntInclusive(1000, 4000),
-        this.chartServiceService.getRandomIntInclusive(1000, 4000),
-        this.chartServiceService.getRandomIntInclusive(1000, 4000),
-        this.chartServiceService.getRandomIntInclusive(1000, 4000),
-        this.chartServiceService.getRandomIntInclusive(1000, 4000),
-      ];
-      const mark3 = [
-        this.chartServiceService.getRandomIntInclusive(1000, 4000),
-        this.chartServiceService.getRandomIntInclusive(1000, 4000),
-        this.chartServiceService.getRandomIntInclusive(1000, 4000),
-        this.chartServiceService.getRandomIntInclusive(1000, 4000),
-        this.chartServiceService.getRandomIntInclusive(1000, 4000),
-      ];
-      const mark4 = [
-        this.chartServiceService.getRandomIntInclusive(1000, 4000),
-        this.chartServiceService.getRandomIntInclusive(1000, 4000),
-        this.chartServiceService.getRandomIntInclusive(1000, 4000),
-        this.chartServiceService.getRandomIntInclusive(1000, 4000),
-        this.chartServiceService.getRandomIntInclusive(1000, 4000),
-      ];
-      this.chart!.chart!.data.datasets[0].data = mark1;
-      this.chart!.chart!.data.datasets[1].data = mark2;
-      this.chart!.chart!.data.datasets[2].data = mark3;
-      this.chart!.chart!.data.datasets[3].data = mark4;
-      this.chart?.chart?.update();
-    }, 8000);
+  upDateChart(responseData: ChartDataModel[]) {
+    this.chart!.chart!.data.datasets[0].data = responseData[0].mark;
+    this.chart!.chart!.data.datasets[1].data = responseData[1].mark;
+    this.chart!.chart!.data.datasets[2].data = responseData[2].mark;
+    this.chart!.chart!.data.datasets[3].data = responseData[3].mark;
+    this.chart?.chart?.update();
   }
 }

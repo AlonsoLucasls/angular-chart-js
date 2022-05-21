@@ -1,16 +1,21 @@
 import { PieChartModel } from './../pie-chart/models/pie-chart.model';
 import { LineChartModel } from './../line-chart/models/line-chart.model';
-import { DoughnutChartModel } from './../doughnut-chart/models/doughnut-chart.model';
-import { BarChartModel } from './../bar-chart/models/bar-chart.model';
+import {
+  DoughnutChartModel,
+  DoughnutChartModelApi,
+} from './../doughnut-chart/models/doughnut-chart.model';
+import {
+  BarChartModel,
+} from './../bar-chart/models/bar-chart.model';
 import { EventEmitter, Injectable, Output } from '@angular/core';
 import * as sr from '@microsoft/signalr';
 
 @Injectable({
   providedIn: 'root',
 })
-export class ChartServiceService {
-  @Output() notification: EventEmitter<ChartModel> =
-    new EventEmitter<ChartModel>();
+export class ChartService {
+  @Output() notification: EventEmitter<ChartDataModel> =
+    new EventEmitter<ChartDataModel>();
 
   public connection?: sr.HubConnection;
 
@@ -34,8 +39,8 @@ export class ChartServiceService {
         return console.error(err.toString());
       });
 
-    this.connection.on('UpdateChart', (chartModel: ChartModel) => {
-      this.notification.emit({ ...chartModel } as ChartModel);
+    this.connection.on('UpdateChart', (chartDataModel: ChartDataModel) => {
+      this.notification.emit(chartDataModel as ChartDataModel);
     });
   }
 
@@ -52,9 +57,6 @@ export class ChartServiceService {
   }
 }
 
-export interface ChartModel {
-  barChart: BarChartModel;
-  doughnutChart: DoughnutChartModel;
-  lineChart: LineChartModel;
-  pieChart: PieChartModel;
+export interface ChartDataModel {
+  mark: number[];
 }

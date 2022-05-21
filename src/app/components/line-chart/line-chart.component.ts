@@ -1,7 +1,11 @@
-import { ChartServiceService } from './../service/chart-service.service';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ChartData, ChartOptions } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
+import { Subscription } from 'rxjs';
+import {
+  ChartDataModel,
+  ChartService,
+} from './../service/chart-service.service';
 import { LineChartModel } from './models/line-chart.model';
 
 @Component({
@@ -26,7 +30,7 @@ export class LineChartComponent implements OnInit, OnDestroy {
   };
 
   dataSetValue: LineChartModel[] = [];
-  timerId: any;
+
   mark1 = [
     this.chartService.getRandomIntInclusive(200, 8000),
     this.chartService.getRandomIntInclusive(200, 8000),
@@ -55,15 +59,25 @@ export class LineChartComponent implements OnInit, OnDestroy {
     this.chartService.getRandomIntInclusive(200, 8000),
     this.chartService.getRandomIntInclusive(200, 8000),
   ];
-  constructor(private chartService: ChartServiceService) {}
+
+  subscription?: Subscription;
+
+  constructor(private chartService: ChartService) {
+    this.subscription = this.chartService.notification.subscribe(
+      (response: ChartDataModel[]) => {
+        if (response) {
+          this.upDateChart(response);
+        }
+      }
+    );
+  }
 
   ngOnInit() {
     this.initChart();
-    this.initTime();
   }
 
   ngOnDestroy(): void {
-    clearInterval(this.timerId);
+    this.subscription?.unsubscribe();
   }
 
   initChart() {
@@ -79,42 +93,12 @@ export class LineChartComponent implements OnInit, OnDestroy {
     };
   }
 
-  initTime() {
-    this.timerId = setInterval(() => {
-      const mark1 = [
-        this.chartService.getRandomIntInclusive(200, 8000),
-        this.chartService.getRandomIntInclusive(200, 8000),
-        this.chartService.getRandomIntInclusive(200, 8000),
-        this.chartService.getRandomIntInclusive(200, 8000),
-        this.chartService.getRandomIntInclusive(200, 8000),
-      ];
-      const mark2 = [
-        this.chartService.getRandomIntInclusive(200, 8000),
-        this.chartService.getRandomIntInclusive(200, 8000),
-        this.chartService.getRandomIntInclusive(200, 8000),
-        this.chartService.getRandomIntInclusive(200, 8000),
-        this.chartService.getRandomIntInclusive(200, 8000),
-      ];
-      const mark3 = [
-        this.chartService.getRandomIntInclusive(200, 8000),
-        this.chartService.getRandomIntInclusive(200, 8000),
-        this.chartService.getRandomIntInclusive(200, 8000),
-        this.chartService.getRandomIntInclusive(200, 8000),
-        this.chartService.getRandomIntInclusive(200, 8000),
-      ];
-      const mark4 = [
-        this.chartService.getRandomIntInclusive(200, 8000),
-        this.chartService.getRandomIntInclusive(200, 8000),
-        this.chartService.getRandomIntInclusive(200, 8000),
-        this.chartService.getRandomIntInclusive(200, 8000),
-        this.chartService.getRandomIntInclusive(200, 8000),
-      ];
-      this.chart!.chart!.data.datasets[0].data = mark1;
-      this.chart!.chart!.data.datasets[1].data = mark2;
-      this.chart!.chart!.data.datasets[2].data = mark3;
-      this.chart!.chart!.data.datasets[3].data = mark4;
-      this.chart?.chart?.update();
-    }, 5000);
+  upDateChart(responseData: ChartDataModel[]) {
+    this.chart!.chart!.data.datasets[0].data = responseData[0].mark;
+    this.chart!.chart!.data.datasets[1].data = responseData[1].mark;
+    this.chart!.chart!.data.datasets[2].data = responseData[2].mark;
+    this.chart!.chart!.data.datasets[3].data = responseData[3].mark;
+    this.chart?.chart?.update();
   }
 
   getRandomIntInclusive(min: number, max: number) {
