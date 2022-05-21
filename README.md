@@ -9,6 +9,8 @@ Using the branch "feature/chart-random-call" you don't need to run the [Chart AP
 
 This project was generated with Angular CLI version 13.3.0, Chart.js version 3.7.1 and ng2-charts version 3.0.11.
 
+![](https://github.com/AlonsoLucasls/angular-chart-js/blob/main/featureChartUpdate.gif)
+
 ## Development server
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
